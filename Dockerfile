@@ -5,7 +5,6 @@ ENV KAFKA_VERSION=${KAFKA_VERSION}
 ARG KAFKA_ADVERTISED_LISTENERS
 ENV ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}
 
-#ENV KAFKA_VERSION=3.6.1
 ENV SCALA_VERSION=2.13
 ENV KAFKA_HOME=/opt/kafka
 ENV KAFKA_LOGS=/kafka_logs/
@@ -19,7 +18,7 @@ LABEL name="kafka" version=${KAFKA_VERSION}
 RUN apk update \
  && apk add openssl \
  && apk add bash \
- && apk add openjdk11 
+ && apk add openjdk17
 
 # Create a non-root user, setting id to >=10000 to avoid clashing and creating a directory structure
 RUN adduser -D -u 10000 -h /home/kafka-user -s /bin/sh kafka-user

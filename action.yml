@@ -7,7 +7,7 @@ branding:
 inputs:
   kafka-version:
     description: "Kafka version to use"
-    default: "3.7.0"
+    default: "4.1.0"
     required: false
   kafka-topics:
     description: "A comma separated list of topics with their partition counts - e.g. foobar,10,test,5"
@@ -20,8 +20,21 @@ runs:
     - name: 🏗 Checkout Kafka kraft repo
       uses: actions/checkout@v4
       with:
-        repository: spicyparrot/kafka-kraft-action
+        repository: MeerKatDev/kafka-kraft-action
+        ref: trunk
         path: "kafka"
+
+    - name: Install envsubst
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y gettext-base
+
+    - name: Install Docker Compose v2
+      shell: bash
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-$(uname -s)-$(uname -m)" \
+          -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
 
     - name: 🧠 Bring up KRaft Broker
       working-directory: kafka
@@ -33,3 +46,10 @@ runs:
       working-directory: kafka
       shell: bash
       run: ./scripts/create_topics.sh --topics ${{ inputs.kafka-topics }}
+      
+    - name: Show Docker status on failure
+      if: failure()
+      shell: bash
+      run: |
+        docker ps -a
+        docker logs kafka || echo "Kafka container not found"
