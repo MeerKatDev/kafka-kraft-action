@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       args:
         KAFKA_VERSION: $KAFKA_VERSION
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,EXTERNAL://$ADVERTISED_HOSTNAME:9093
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,EXTERNAL://localhost:9093
     container_name: kafka
     ports:
       - "9092:9092"
